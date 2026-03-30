@@ -1,0 +1,60 @@
+name: CI/CD Pipeline - VV&T
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: alimentos
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+
+    - name: Instalar dependências
+      run: |
+        pip install -r requirements.txt
+
+    - name: Esperar MySQL
+      run: |
+        for i in {1..10}; do
+          if mysqladmin ping -h 127.0.0.1 -proot --silent; then
+            echo "MySQL pronto!"
+            break
+          fi
+          sleep 5
+        done
+
+    - name: Criar banco
+      run: |
+        mysql -h 127.0.0.1 -uroot -proot < database.sql
+
+    - name: Testar conexão
+      run: |
+        python -c "from db import conectar; conectar(); print('Conectado com sucesso!')"
+
+    - name: Rodar testes
+      run: |
+        pytest -v
