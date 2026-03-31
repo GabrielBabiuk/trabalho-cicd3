@@ -1,3 +1,15 @@
+import pytest
+from gerador_codigo import gerar_codigo
+import mysql.connector
+
+def conectar():
+    return mysql.connector.connect(
+        host="127.0.0.1",
+        user="root",
+        password="root",
+        database="alimentos"
+    )
+
 def test_tabela():
     conn = conectar()
     cursor = conn.cursor()
