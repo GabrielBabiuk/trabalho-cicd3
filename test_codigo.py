@@ -1,5 +1,14 @@
 import pytest
 from gerador_codigo import gerar_codigo
+import mysql.connector
+
+def conectar():
+    return mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="1234",
+        database="seu_banco"
+    )
 
 def test_geracao_codigo_existente():
     codigo, sec = gerar_codigo("C", "A", "BR")
@@ -29,19 +38,18 @@ def test_pais_invalido():
     with pytest.raises(ValueError):
         gerar_codigo("A", "B", "BRA")
 
-def test_tabela
+def test_tabela():
     conn = conectar()
     cursor = conn.cursor()
-cursor.execute(SELECT * FROM alimentos)
-resultados = cursor.fetchall
 
-print("resultado da tabela alimentos é:")
-    for linha in resultados: 
+    cursor.execute("SELECT * FROM alimentos")
+    resultados = cursor.fetchall()
+
+    print("\n📊 Resultado da tabela alimentos:")
+    for linha in resultados:
         print(linha)
+
     cursor.close()
     conn.close()
 
-    assert true
-    
-
-
+    assert True
