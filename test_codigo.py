@@ -4,10 +4,10 @@ import mysql.connector
 
 def conectar():
     return mysql.connector.connect(
-        host="localhost",
+        host="127.0.0.1",
         user="root",
-        password="1234",
-        database="seu_banco"
+        password="root",
+        database="alimentos"
     )
 
 def test_geracao_codigo_existente():
