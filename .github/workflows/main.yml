@@ -19,7 +19,7 @@ jobs:
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot"
+          --health-cmd="mysqladmin ping -h localhost -proot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
@@ -36,11 +36,10 @@ jobs:
     - name: Instalar dependências
       run: |
         pip install -r requirements.txt
-        pip install pytest mysql-connector-python
 
     - name: Esperar MySQL
       run: |
-        for i in {1..15}; do
+        for i in {1..10}; do
           if mysqladmin ping -h 127.0.0.1 -proot --silent; then
             echo "MySQL pronto!"
             break
@@ -48,14 +47,13 @@ jobs:
           sleep 5
         done
 
-    - name: Criar banco e tabela
+    - name: Criar banco
       run: |
-        mysql -h 127.0.0.1 -uroot -proot -e "CREATE DATABASE IF NOT EXISTS alimentos;"
-        mysql -h 127.0.0.1 -uroot -proot alimentos < database.sql
+        mysql -h 127.0.0.1 -uroot -proot < database.sql
 
     - name: Testar conexão
       run: |
-        python -c "import mysql.connector; mysql.connector.connect(host='127.0.0.1', user='root', password='root', database='alimentos'); print('Conectado com sucesso!')"
+        python -c "from db import conectar; conectar(); print('Conectado com sucesso!')"
 
     - name: Rodar testes
       run: |
