@@ -28,3 +28,20 @@ def test_entrada_invalida():
 def test_pais_invalido():
     with pytest.raises(ValueError):
         gerar_codigo("A", "B", "BRA")
+
+def test_tabela
+    conn = conectar()
+    cursor = conn.cursor()
+cursor.execute(SELECT * FROM alimentos)
+resultados = cursor.fetchall
+
+print("resultado da tabela alimentos é:")
+    for linha in resultados: 
+        print(linha)
+    cursor.close()
+    conn.close()
+
+    assert true
+    
+
+
